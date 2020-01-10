@@ -6,7 +6,7 @@ quite fit into the core fips project.
 ## Usage
 
 Just add the ```fips-utils``` import to the ```fips.yml``` file
-of your project and run ```fips fetch```.
+of your project:
 
 ```yaml
 ---
@@ -15,10 +15,12 @@ imports:
         git: https://github.com/fips-libs/fips-utils
 ```
 
-Now run ```fips help```, this should list additional verbs (subcommands),
-```fips list configs```, and check out the additional generators
-under ```fips-files/generators``` and cmake helper macros in
-```fips-files/include.cmake```.
+Now run ```fips fetch```.
+
+New fips verbs (aka commands) can be listed via ```fips help```, new
+build configs via ```fips list configs```.
+
+For help on generators (aka custom build jobs) read on:
 
 ## Generators (aka Custom Build Jobs)
 
