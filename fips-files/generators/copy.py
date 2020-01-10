@@ -24,6 +24,13 @@
     By default the files are expected in the same directory as the .yml file,
     and are copied to the root of the deploy dir (where the executable is
     located).
+
+    To invoke the copy operation as custom build step from CMakeLists.txt files, 
+    use the cmake macro from inside a fips_begin_*()/fips_end() block:
+
+    fipsutil_copy_files(yml_file.yml)
+
+    This macro is defined in fips-utils/fips-files/include.cmake.
 '''
 Version = 1
 
@@ -85,10 +92,10 @@ def generate(input, out_src, out_hdr, args):
         if util.getEnv('target_platform') == 'ios' and 'ios' in yml['options']:
             if 'dst_dir' in yml['options']['ios']:
                 dst_dir += yml['options']['ios']['dst_dir'] + '/'
-        else if util.getEnv('target_platform') == 'osx' and 'macos' in yml['options']:
+        elif util.getEnv('target_platform') == 'osx' and 'macos' in yml['options']:
             if 'dst_dir' in yml['options']['macos']:
                 dst_dir += yml['options']['macos']['dst_dir'] + '/'
-        else if 'dst_dir' in yml['options']:
+        elif 'dst_dir' in yml['options']:
             dst_dir += yml['options']['dst_dir']
         del yml['options']
     if not os.path.exists(dst_dir):
