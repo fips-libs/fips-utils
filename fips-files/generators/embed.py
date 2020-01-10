@@ -5,24 +5,25 @@
 
       Usage:
 
-      Create a YAML file with a list of files to convert, and optional
-      options:
+      Create a YAML file with a list of files to convert and options:
 
       ---
       options:
-          prefix: [optional C name prefix, default is 'embed']
+          prefix: [optional C name prefix, default is 'embed_']
           src_dir: [optional relative source directory]
-          list_items: true [default: false, see below]
+          list_items: true [default is false, see below]
       files:
           - c64_basic.bin
           - c64_char.bin
           - c64_kernalv3.bin
 
-      For each file in the file list, a C array of type unsigned char[] will be
-      generated which is named '[prefix_][filename]_[ext]'.
+      All files will be dumped into a single C header, each file will 
+      be dumped into a C array of type 'unsigned char []' and name
+      '[prefix][file name]_[file extension]'.
 
       If the option 'list_items: true' is provided, an array of item descriptions
-      and a define with the number of items is provided looking like this:
+      and a define with the number of items is provided looking like this, this
+      allows to iterate over the embedded data at runtime.
 
           typedef struct { const char* name; const uint8_t* ptr; int size; } [prefix_]item_t;
           #define [PREFIX_]NUM_ITEMS (265)
