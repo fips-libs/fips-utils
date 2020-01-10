@@ -1,5 +1,7 @@
 # fips-utils
-Grab-bag of useful fips verb- and generator-script not in "fips core"
+
+Grab-bag of useful fips utilities which are generally useful but don't
+quite fit into the core fips project.
 
 ## Usage
 
@@ -18,12 +20,15 @@ Now run ```fips help```, this should list additional verbs (subcommands),
 under ```fips-files/generators``` and cmake helper macros in
 ```fips-files/include.cmake```.
 
-## Generators (Custom Build Jobs)
+## Generators (aka Custom Build Jobs)
 
 Those are usually available through cmake macros:
 
-- [fipsutil_copy_files()](fips-files/generators/copy.py): copy files from
-  project directory to deployment directory
+- [fipsutil_copy()](fips-files/generators/copy.py): copy files from project directory to deployment directory
+- [fipsutil_embed()](fips-files/generators/embed.py): embed binary files into C headers
+
+For usage examples, see the [sokol-samples](https://github.com/floooh/sokol-samples/)
+and [chips-test](https://github.com/floooh/chips-test/) repositories.
 
 ## Verbs (TODO)
 
