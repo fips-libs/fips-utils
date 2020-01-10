@@ -22,7 +22,8 @@ under ```fips-files/generators``` and cmake helper macros in
 
 Those are usually available through cmake macros:
 
-- [fipsutil_copy_files()](fips-files/generators/copy.py)
+- [fipsutil_copy_files()](fips-files/generators/copy.py): copy files from
+  project directory to deployment directory
 
 ## Verbs (TODO)
 
