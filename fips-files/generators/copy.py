@@ -28,7 +28,7 @@
     To invoke the copy operation as custom build step from CMakeLists.txt files, 
     use the cmake macro from inside a fips_begin_*()/fips_end() block:
 
-    fipsutil_copy_files(yml_file.yml)
+    fipsutil_copy(yml_file.yml)
 
     This macro is defined in fips-utils/fips-files/include.cmake.
 '''
