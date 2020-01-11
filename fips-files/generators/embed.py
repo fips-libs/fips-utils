@@ -34,7 +34,7 @@
           };
 '''
 
-Version = 1
+Version = 5
 
 import sys
 import os.path
@@ -84,8 +84,8 @@ def gen_header(out_hdr, src_dir, files, prefix, list_items) :
                 genutil.fmtError("Input file not found: '{}'".format(file_path))
         if list_items:
             f.write('typedef struct {{ const char* name; const uint8_t* ptr; int size; }} {}item_t;\n'.format(prefix))
-            f.write('#define {}NUM_ITEMS ({})\n'.format(prefix, len(items)))
-            f.write('{}item_t {}items[{}NUM_ITEMS] = {{\n'.format(prefix, prefix, prefix))
+            f.write('#define {}NUM_ITEMS ({})\n'.format(prefix.upper(), len(items)))
+            f.write('{}item_t {}items[{}NUM_ITEMS] = {{\n'.format(prefix, prefix, prefix.upper()))
             for name,size in sorted(items.items()):
                 f.write('{{ "{}", {}, {} }},\n'.format(name[5:], name, size))
             f.write('};\n')
