@@ -8,6 +8,8 @@
 macro(fipsutil_copy yml_file)
     fips_generate(FROM ${yml_file}
         TYPE copy
+        SRC_EXT ".c"
+        HDR_EXT ".h"
         OUT_OF_SOURCE
         ARGS "{ deploy_dir: \"${FIPS_PROJECT_DEPLOY_DIR}\" }")
 endmacro()
