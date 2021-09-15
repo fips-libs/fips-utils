@@ -44,33 +44,30 @@ import platform
 from shutil import ignore_patterns
 
 #-------------------------------------------------------------------------------
-def copy_files(src_dir, dst_dir, yml):
+def copy_files(src_dir, dst_dir, ignore_list, yml):
     for filename in yml['files']:
         src = src_dir + filename
         dst = dst_dir + filename
         print("## cp '{}' => '{}'".format(filename, dst))
-        if not os.path.exists(os.path.dirname(dst)):
-            os.makedirs(os.path.dirname(dst))
-        try:
-            shutil.copyfile(src, dst)
-        except IOError as err:
-            # show a proper error if file copying fails
-            util.fmtError("Failed to copy file '{}' with '{}'".format(err.filename, err.strerror))
-
-def copy_folders(src_dir, dst_dir, ignore_list, yml):
-    for folders in yml['folders']:
-        src = src_dir + folders
-        dst = dst_dir + folders
-        print("## cp '{}' => '{}'".format(folders, dst))
-        try:
-            # if the folder already exists, copytree will unfortunately fail. This is fixed in 3.8+, but for now this is the easiest solution
+        
+        if os.path.isdir(src):
+             # if the folder already exists, copytree will unfortunately fail. This is fixed in 3.8+, but for now this is the easiest solution
             if os.path.exists(dst):
                 shutil.rmtree(dst)
-            shutil.copytree(src, dst, ignore=ignore_patterns(*ignore_list))
-        except IOError as err:
-            # show a proper error if file copying fails
-            util.fmtError("Failed to copy folder '{}' with '{}'".format(err.filename, err.strerror))
-
+            try:
+                shutil.copytree(src, dst, ignore=ignore_patterns(*ignore_list))
+            except IOError as err:
+                # show a proper error if file copying fails
+                util.fmtError("Failed to copy folder '{}' with '{}'".format(err.filename, err.strerror))
+        else:
+            if not os.path.exists(os.path.dirname(dst)):
+                os.makedirs(os.path.dirname(dst))
+            try:
+                shutil.copyfile(src, dst)
+            except IOError as err:
+                # show a proper error if file copying fails
+                util.fmtError("Failed to copy file '{}' with '{}'".format(err.filename, err.strerror))
+                
 #-------------------------------------------------------------------------------
 def gen_header(out_hdr, yml):
     with open(out_hdr, 'w') as f:
@@ -87,12 +84,13 @@ def check_dirty(src_root_path, input, out_hdr, yml):
     in_files  = [input]
     if 'files' in yml:
         for filename in yml['files']:
-            in_files.append(os.path.abspath(src_root_path + filename))
-    if 'folders' in yml:
-        for folder in yml['folders']:
-            for root, dirs, files in os.walk(os.path.abspath(src_root_path + folder)):
-                for filename in files:
-                    in_files.append(os.path.abspath(src_root_path + folder + filename))
+            abs_path = os.path.abspath(src_root_path + filename)
+            if os.path.isdir(abs_path):
+                for root, dirs, files in os.walk(abs_path):
+                    for file in files:
+                        in_files.append(os.path.abspath(src_root_path + filename + file))
+            else:
+                in_files.append(abs_path)
 
     return util.isDirty(Version, in_files, out_files)
 
@@ -124,13 +122,9 @@ def generate(input, out_src, out_hdr, args):
     ignore_list = ''
     if 'ignore' in yml:
         ignore_list = yml['ignore']
-        print(ignore_list)
 
     if not os.path.exists(dst_dir):
         os.makedirs(dst_dir)
     if check_dirty(src_root_path, input, out_hdr, yml):
-        if 'files' in yml:
-            copy_files(src_root_path, dst_dir, yml)
-        if 'folders' in yml:
-            copy_folders(src_root_path, dst_dir, ignore_list, yml)
+        copy_files(src_root_path, dst_dir, ignore_list, yml)
         gen_header(out_hdr, yml)
