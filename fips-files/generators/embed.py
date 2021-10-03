@@ -1,39 +1,45 @@
 '''
     embed.py
 
-      Convert binary files to a C array in a header.
+    Convert binary files to a C array in a header.
 
-      Usage:
+    Usage:
 
-      Create a YAML file with a list of files to convert and options:
+    Create a YAML file with a list of files to convert and options:
 
-      ---
-      options:
-          prefix: [optional C name prefix, default is 'embed_']
-          src_dir: [optional relative source directory]
-          list_items: true [default is false, see below]
-      files:
-          - c64_basic.bin
-          - c64_char.bin
-          - c64_kernalv3.bin
+        ---
+        options:
+            prefix: [optional C name prefix, default is 'embed_']
+            src_dir: [optional relative source directory]
+            list_items: true [default is false, see below]
+        files:
+            - c64_basic.bin
+            - c64_char.bin
+            - c64_kernalv3.bin
+        
+    Add a call to fipsutil_embed() to your CMakeLists.txt inside
+    a fips_begin/end block:
 
-      All files will be dumped into a single C header, each file will 
-      be dumped into a C array of type 'unsigned char []' and name
-      '[prefix][file name]_[file extension]'.
+        fipsutil_embed(src.yml dst.h)
 
-      If the option 'list_items: true' is provided, an array of item descriptions
-      and a define with the number of items is provided looking like this, this
-      allows to iterate over the embedded data at runtime.
+    All files will be dumped into a single C header, each file will 
+    be dumped into a C array of type 'unsigned char []' and name
+    '[prefix][file name]_[file extension]'.
 
-          typedef struct { const char* name; const uint8_t* ptr; int size; } [prefix_]item_t;
-          #define [PREFIX_]NUM_ITEMS (265)
-          [prefix_]item [prefix_]items[[PREFIX_]NUM_ITEMS] = {
-              { "_start", dump__start, 3438 },
-              { "adca", dump_adca, 842 },
-              ...
-          };
-      If the option 'list_items: "full"' is provided, the behaviour is simmilar to when
-      'list_items: true' is used, but, the "real" filenames will be used in the list.
+    If the option 'list_items: true' is provided, an array of item descriptions
+    and a define with the number of items is provided looking like this, this
+    allows to iterate over the embedded data at runtime.
+
+        typedef struct { const char* name; const uint8_t* ptr; int size; } [prefix_]item_t;
+        #define [PREFIX_]NUM_ITEMS (265)
+        [prefix_]item [prefix_]items[[PREFIX_]NUM_ITEMS] = {
+            { "_start", dump__start, 3438 },
+            { "adca", dump_adca, 842 },
+            ...
+        };
+
+    If the option 'list_items: "full"' is provided, the behaviour is similar to when
+    'list_items: true' is used, but, the "real" filenames will be used in the list.
 '''
 
 Version = 6
