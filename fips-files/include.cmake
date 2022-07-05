@@ -11,7 +11,7 @@ macro(fipsutil_copy yml_file)
         SRC_EXT ".c"
         HDR_EXT ".h"
         OUT_OF_SOURCE
-        ARGS "{ deploy_dir: \"${FIPS_PROJECT_DEPLOY_DIR}\" }")
+        ARGS "{ target_name: \"${CurTargetName}\", deploy_dir: \"${FIPS_PROJECT_DEPLOY_DIR}\" }")
 endmacro()
 
 #-------------------------------------------------------------------------------
