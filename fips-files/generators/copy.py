@@ -73,8 +73,8 @@ def copy_files(src_dir, dst_dir, ignore_list, config):
 
 
 #-------------------------------------------------------------------------------
-def gen_header(out_hdr, config):
-    with open(out_hdr, 'w') as f:
+def gen_header(out_dummy_file):
+    with open(out_dummy_file, 'w') as f:
         f.write('#pragma once\n')
         f.write('//------------------------------------------------------------------------------\n')
         f.write('// #version:{}#\n'.format(Version))
@@ -84,8 +84,8 @@ def gen_header(out_hdr, config):
 
 
 #-------------------------------------------------------------------------------
-def check_dirty(src_root_path, input, out_hdr, config):
-    out_files = [out_hdr]
+def check_dirty(src_root_path, input, out_dummy_file, config):
+    out_files = [out_dummy_file]
     in_files = [input]
     if 'files' in config:
         for filename in config['files']:
@@ -130,6 +130,7 @@ def generate(input, out_src, out_hdr, args):
         del config['options']
 
     dst_dir = dst_dir.replace('$TARGET_NAME', args['target_name'])
+    out_dummy_file = os.path.join(dst_dir, os.path.basename(out_hdr))
 
     ignore_list = ''
     if 'ignore' in config:
@@ -137,6 +138,6 @@ def generate(input, out_src, out_hdr, args):
 
     if not os.path.exists(dst_dir):
         os.makedirs(dst_dir)
-    if check_dirty(src_root_path, input, out_hdr, config):
+    if check_dirty(src_root_path, input, out_dummy_file, config):
         copy_files(src_root_path, dst_dir, ignore_list, config)
-        gen_header(out_hdr, config)
+        gen_header(out_dummy_file)
